@@ -1,0 +1,10 @@
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout"
+         xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+    
+   ${it.errorType}
+<j:if test="${it.errorType}">
+       This test has been tagged as being due to a <b>${it.errorType}</b>.
+</j:if>
+<br/>
+   
+</j:jelly>

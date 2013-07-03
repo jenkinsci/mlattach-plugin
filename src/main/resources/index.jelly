@@ -1,0 +1,7 @@
+<!--
+  This view is used to render the installed plugins page.
+-->
+<div>
+  This plugin will allow you to tag a test failure as being due to an automation
+    bug or a product bug. 
+</div>
