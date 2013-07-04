@@ -64,7 +64,7 @@ public class TestDataPublisher extends hudson.tasks.junit.TestDataPublisher {
       public List<TestAction> getTestAction(hudson.tasks.junit.TestObject testObject){
 
           String id = testObject.getId();
-          XmlFile data = new XmlFile(new File(build.getRootDir(), "mlattach/" + id+));
+          XmlFile data = new XmlFile(new File(build.getRootDir(), "mlattach/" + id+".xml"));
           if (data.exists()) {
               try {
                   TestAction r = (TestAction) data.read();
