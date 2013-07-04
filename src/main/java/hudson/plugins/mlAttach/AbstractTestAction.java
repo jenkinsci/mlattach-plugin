@@ -18,15 +18,19 @@ public abstract class AbstractTestAction<T> extends hudson.tasks.junit.TestActio
     
     protected boolean error_set;
     protected boolean error_type;
-    protected T owner;
-   
-    
+    protected transient T owner;
+
+
     AbstractTestAction(T owner){
         this.owner = owner;
         this.error_set = false;
     }
     
-   
+    public void setOwner(T owner) {
+        this.owner = owner;
+    }
+
+
     public void setErrorType(boolean type){
         error_set = true;
         error_type = type;
