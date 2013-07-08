@@ -19,12 +19,15 @@ import org.kohsuke.stapler.StaplerResponse;
 @ExportedBean(defaultVisibility =2 )
 public class TestAction extends AbstractTestAction<Data> {
 
-    transient private final hudson.tasks.test.TestObject testObject;
+    protected hudson.tasks.test.TestObject testObject;
 
     TestAction(Data o, hudson.tasks.test.TestObject t) {
         super(o);
-        testObject = t;
-        determineErrorType();
+        this.testObject = t;
+       // determineErrorType();
+    }
+    public void setTestObject(hudson.tasks.test.TestObject t){
+        this.testObject = t;
     }
     
      public void doWrite(StaplerRequest request, StaplerResponse response)
@@ -38,11 +41,13 @@ public class TestAction extends AbstractTestAction<Data> {
         String errorM = request.getSubmittedForm().getString("errorM");
         String displayN = request.getSubmittedForm().getString("displayN");
         String job_name = request.getSubmittedForm().getString("job_name");
-        
+        String id = request.getSubmittedForm().getString("id");
+
         this.setErrorType(type);
+        owner.addAction(id,this);
         
         writeTestResults(type,displayN.concat(job_name),duration,errorS,errorM);
-        
+
         response.forwardToPreviousPage(request);
         
      }

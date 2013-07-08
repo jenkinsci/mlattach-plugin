@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
 import java.io.IOException;
+import  java.*;
 
 
 import org.kohsuke.stapler.DataBoundConstructor;
@@ -29,8 +30,15 @@ import org.kohsuke.stapler.DataBoundConstructor;
  */
 public class TestDataPublisher extends hudson.tasks.junit.TestDataPublisher {
 
+    private String regex;
+
     @org.kohsuke.stapler.DataBoundConstructor
-    public TestDataPublisher() {}
+    public TestDataPublisher(String regex) { this.regex = regex;}
+
+
+    public String getRegex(){
+        return regex;
+    }
 
     /**
      * Called after test results are collected by Hudson, to create a resolver for TestActions.
@@ -52,8 +60,10 @@ public class TestDataPublisher extends hudson.tasks.junit.TestDataPublisher {
         }*/
         return data;
     }
+
+
     
-   public static class Data extends hudson.tasks.junit.TestResultAction.Data{
+    public static class Data extends hudson.tasks.junit.TestResultAction.Data{
        private final AbstractBuild<?, ?> build;
 
        public Data(AbstractBuild<?, ?> build){
@@ -64,46 +74,45 @@ public class TestDataPublisher extends hudson.tasks.junit.TestDataPublisher {
       public List<TestAction> getTestAction(hudson.tasks.junit.TestObject testObject){
 
           String id = testObject.getId();
+
           XmlFile data = new XmlFile(new File(build.getRootDir(), "mlattach/" + id+".xml"));
           if (data.exists()) {
               try {
                   TestAction r = (TestAction) data.read();
                   r.setOwner(this);
-                  return Collections.singletonList(r);
+                  r.setTestObject((hudson.tasks.test.TestObject) testObject);
+
+                  //Only display the form on pages with failed case results
+                  if(testObject instanceof CaseResult){
+                      CaseResult cr = (CaseResult) testObject;
+                      if(!cr.isPassed() && !cr.isSkipped()){
+                        return Collections.<TestAction>singletonList(r);
+                      }
+                  }
+
               } catch (IOException e) {
                   // TODO: report and move on
               }
           }
+          return Collections.emptyList();
+      }
 
-         return Collections.emptyList();
-
-//          TestAction result = tags.get(id);
-//
-//           if (testObject instanceof CaseResult) {
-//               if(result != null){
-//                   return Collections.<TestAction>singletonList(result);
-//               }
-//               CaseResult cr = (CaseResult) testObject;
-//               //This conditonal eliminates the ones in the jelly
-//               if (!cr.isPassed() && !cr.isSkipped()) {
-//                   hudson.tasks.test.TestObject t = (hudson.tasks.test.TestObject) testObject;
-//                   TestAction action = new TestAction(this,t);
-//                   tags.put(t.getId(), action);
-//                   return Collections.<TestAction>singletonList(action);
-//               }
-//           }
-
-
-       }
-      
       public void addAction(String testId, TestAction action) throws IOException {
           new XmlFile(new File(build.getRootDir(), "mlattach/" + testId+".xml")).write(action);
       }
+    }
 
-      
+       @hudson.Extension
+       public static class DescriptorImpl extends Descriptor<hudson.tasks.junit.TestDataPublisher>{
+
+           @Override
+           public String getDisplayName(){
+               return "Tag test results";
+
+           }
     
   
-   }
+             }
 }
 
       

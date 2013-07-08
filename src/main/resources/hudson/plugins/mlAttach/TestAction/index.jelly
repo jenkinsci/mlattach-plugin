@@ -2,6 +2,7 @@
          xmlns:t="/lib/hudson" xmlns:f="/lib/form">
     
    ${it.errorType}
+    ${it}
 <j:if test="${it.errorType}">
        This test has been tagged as being due to a <b>${it.errorType}</b>.
 </j:if>
