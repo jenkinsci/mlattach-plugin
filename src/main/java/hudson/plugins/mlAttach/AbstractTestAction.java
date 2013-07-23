@@ -40,8 +40,8 @@ public abstract class AbstractTestAction<T> extends hudson.tasks.junit.TestActio
     
     public String getErrorType(){
        if(!error_set) return null;
-       else if(error_type) return "product bug";
-       return "script bug";
+       else if(error_type) return "Product Bug";
+       return "Script Bug";
     }
   
     
@@ -67,29 +67,8 @@ public abstract class AbstractTestAction<T> extends hudson.tasks.junit.TestActio
     public String getUrlName() {
         return "mlAttach";
     }
-    
-    public void writeTagged(PrintWriter writer, Object input, String tag){
-        writer.print("\n<".concat(tag).concat(">"));
-        writer.print(input);
-        writer.print("</".concat(tag).concat(">"));
-    }
-    
-    /*Writes test results to a file stored on the server*/
-    public synchronized void writeTestResults(boolean type, String filename, 
-            String duration, String errorS, String errorM)
-    throws FileNotFoundException, UnsupportedEncodingException{
-        
-        PrintWriter writer = new PrintWriter(filename.concat(".txt"), "UTF-8");
-        
-        writeTagged(writer,type, "Type");
-        writeTagged(writer,duration,"Duration");
-        writeTagged(writer,errorS,"ErrorS");
-        writeTagged(writer,errorM,"ErrorM");
-        
-        writer.close();
-    }
-    
-   
+
+
     /**
      * This method is apparently for annotating the the actual
      * "Error Message", "Stack Trace", "Standard Output", etc.

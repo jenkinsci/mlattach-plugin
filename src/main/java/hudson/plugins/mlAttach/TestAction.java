@@ -24,7 +24,6 @@ public class TestAction extends AbstractTestAction<Data> {
     TestAction(Data o, hudson.tasks.test.TestObject t) {
         super(o);
         this.testObject = t;
-       // determineErrorType();
     }
     public void setTestObject(hudson.tasks.test.TestObject t){
         this.testObject = t;
@@ -32,40 +31,19 @@ public class TestAction extends AbstractTestAction<Data> {
     
      public void doWrite(StaplerRequest request, StaplerResponse response)
     throws ServletException, IOException, FileNotFoundException, UnsupportedEncodingException{
-         
-         //Get parameters from the form
-         
-        boolean type = request.getSubmittedForm().getBoolean("type");
-        String duration = request.getSubmittedForm().getString("duration");
-        String errorS = request.getSubmittedForm().getString("errorS");
-        String errorM = request.getSubmittedForm().getString("errorM");
-        String displayN = request.getSubmittedForm().getString("displayN");
-        String job_name = request.getSubmittedForm().getString("job_name");
-        String id = request.getSubmittedForm().getString("id");
 
-        this.setErrorType(type);
-        owner.addAction(id,this);
-        
-        writeTestResults(type,displayN.concat(job_name),duration,errorS,errorM);
+        //Get the parameters from the form
+        boolean type = request.getSubmittedForm().getBoolean("type");
+         String id = request.getSubmittedForm().getString("id");
+
+         //Set the error type and save it to the xml file
+         this.setErrorType(type);
+         owner.addAction(id,this);
 
         response.forwardToPreviousPage(request);
         
      }
-    
-    /*Read from the data file to see what error type this should be*/
-    public synchronized final void determineErrorType(){
-        try{
-            File file = new File(testObject.getDisplayName().concat(".txt"));
-            Scanner scan = new Scanner(file);
-            String errorType = scan.nextLine();
-            if(errorType.equals("true")) this.error_type = true;
-            this.error_set = true;
-        
-        }
-        catch (FileNotFoundException e){
-            this.error_set = false;
-        }
-    }
+
     
     public hudson.tasks.test.TestObject getTestObject(){
         return testObject;
