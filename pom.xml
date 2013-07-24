@@ -25,12 +25,4 @@
       <url>http://repo.jenkins-ci.org/public/</url>
     </pluginRepository>
   </pluginRepositories>
-    <dependencies>
-        <dependency>
-            <groupId>org.kohsuke.stapler</groupId>
-            <artifactId>stapler-jsp</artifactId>
-            <version>1.155</version>
-            <type>jar</type>
-        </dependency>
-    </dependencies>
 </project>
